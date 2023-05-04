@@ -1,10 +1,10 @@
 ##########   MINIKUBE (driver docker)
 ##### Procedimientos incluidos en Vagrantfile
 
-curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube_latest_amd64.deb
-dpkg -i minikube_latest_amd64.deb
-curl -LO https://storage.googleapis.com/kubernetes-release/releases/latest/amd/kubectl 
-chmod +x kubectl &&  mv ./kubectl /usr/bin/
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube_latest_amd64.deb <br>
+dpkg -i minikube_latest_amd64.deb <br>
+curl -LO https://storage.googleapis.com/kubernetes-release/releases/latest/amd/kubectl  <br>
+chmod +x kubectl &&  mv ./kubectl /usr/bin/ <br>
 
 ##################################################################
 PROCEDIMIENTOS A EJECUTAR EN MINIKUBE
