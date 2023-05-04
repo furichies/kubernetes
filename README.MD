@@ -65,9 +65,9 @@ kubectl apply -f /vagrant/barom-service.yml
 
 ######################### EXPLICACIÓN 
 <br>
-########### Versión de la API de Kubernetes para el deployment
-apiVersion: apps/v1
-########### Tipo de objeto que se crea (deployment)
+########### Versión de la API de Kubernetes para el deployment<br>
+apiVersion: apps/v1 <br>
+########### Tipo de objeto que se crea (deployment)<br>
 kind: Deployment
 ########### Metadatos del deployment (nombre, namespace y etiquetas)
 metadata:
