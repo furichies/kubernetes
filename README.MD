@@ -62,7 +62,7 @@ kubectl delete all -l app=barom --all-namespaces
 
 kubectl apply -f /vagrant/barom-service.yml
 
-
+<br>
 ######################### EXPLICACIÓN 
 <br>
 ########### Versión de la API de Kubernetes para el deployment<br>
