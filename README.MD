@@ -20,41 +20,41 @@ minikube start
 
 kubectl create namespace aemet
 
-#Agregamos al cluster ingress. En resumen es la fucnionalidad que permite un proxy inverso... recordad que lo ejecutamos con apache y nginx
+########## #Agregamos al cluster ingress. En resumen es la fucnionalidad que permite un proxy inverso... recordad que lo ejecutamos con apache y nginx
 
 minikube addons enable ingress
 
-# Creamos el pod que es un contenedor de datos de presion y altura en el espacio de nombres del aemet. Se etiqueta y denomna como barom
+########## # Creamos el pod que es un contenedor de datos de presion y altura en el espacio de nombres del aemet. Se etiqueta y denomna como barom
 
 kubectl -n aemet run barom --port=7000 --image=ricardoinstructorformacion/barometrico -l app=barom
 
-# ver el resultado de creación del pod
+########## # ver el resultado de creación del pod
 
 kubectl get pods -n aemet
 
-#Creamos el servicio de kubernetes reenviando el puero 80 (típico de http para proxy inverso) al 7000 (dónde escuha la aplicación)
+########## #Creamos el servicio de kubernetes reenviando el puero 80 (típico de http para proxy inverso) al 7000 (dónde escuha la aplicación)
 
 kubectl -n aemet create service clusterip barom --tcp=80:7000
 
-#visualizar apis disponibles
+########## #visualizar apis disponibles
 
 kubectl api-resources
 
 
-# en el directorio /vagrant (compartido por Virtualbox) existe el fichero barom.yaml que contiene la definición del servicio y que se agrega a kubernetes
+########## # en el directorio /vagrant (compartido por Virtualbox) existe el fichero barom.yaml que contiene la definición del servicio y que se agrega a kubernetes
 
 
 kubectl apply -f /vagrant/barom.yml
 
-# Visualizar la ip de minikube
+########## # Visualizar la ip de minikube
 
 minikube ip
 
-# comprobación 
+########## # comprobación 
 
 curl 192.168.49.2/api/pressure_data
 
-# Creamos los pods y el servicio en el mismo yaml. PRIMEO DESTRUIMOS TODO
+########## # Creamos los pods y el servicio en el mismo yaml. PRIMEO DESTRUIMOS TODO
 
 kubectl delete all -l app=barom --all-namespaces
 
@@ -66,84 +66,84 @@ kubectl apply -f /vagrant/barom-service.yml
 ######################### EXPLICACIÓN ##################################################
 #########################################################################################
 #####################################################################################
-# Versión de la API de Kubernetes para el deployment
+########## # Versión de la API de Kubernetes para el deployment
 apiVersion: apps/v1
-# Tipo de objeto que se crea (deployment)
+########## # Tipo de objeto que se crea (deployment)
 kind: Deployment
-# Metadatos del deployment (nombre, namespace y etiquetas)
+########## # Metadatos del deployment (nombre, namespace y etiquetas)
 metadata:
   name: barom
   namespace: aemet
-  # Etiqueta del deployment
+  ########## # Etiqueta del deployment
   labels:
     app: barom
-# Configuración del deployment (número de réplicas y plantilla)
+########## # Configuración del deployment (número de réplicas y plantilla)
 spec:
   replicas: 1
-  # Regla para seleccionar los pods que forman parte del deployment
+  ########## # Regla para seleccionar los pods que forman parte del deployment
   selector:
     matchLabels:
       app: barom
-  # Plantilla para crear los pods
+  ###########  Plantilla para crear los pods
   template:
     metadata:
       labels:
         app: barom
-    # Contenedores que estarán en los pods creados
+    ###########  Contenedores que estarán en los pods creados
     spec:
       containers:
         - name: barom
           image: ricardoinstructorformacion/barometrico
-          # Puertos que se exponen en el contenedor
+          ###########  Puertos que se exponen en el contenedor
           ports:
             - containerPort: 7000
 ---
-# Versión de la API de Kubernetes para el servicio
+###########  Versión de la API de Kubernetes para el servicio
 apiVersion: v1
-# Tipo de objeto que se crea (servicio)
+###########  Tipo de objeto que se crea (servicio)
 kind: Service
-# Metadatos del servicio (nombre, namespace y etiquetas)
+###########  Metadatos del servicio (nombre, namespace y etiquetas)
 metadata:
   name: servicio-barometrico
   namespace: aemet
-  # Etiqueta del servicio
+  ###########  Etiqueta del servicio
   labels:
     app: barom
-# Configuración del servicio (puertos, selección y tipo)
+########### Configuración del servicio (puertos, selección y tipo)
 spec:
-  # Puertos que se exponen en el servicio
+  ###########  Puertos que se exponen en el servicio
   ports:
     - name: http
       port: 80
       protocol: TCP
       targetPort: 7000
-  # Regla para seleccionar los pods a los que se dirige el servicio
+  ########### Regla para seleccionar los pods a los que se dirige el servicio
   selector:
     app: barom
-  # Tipo de servicio (ClusterIP)
+  ########## # Tipo de servicio (ClusterIP)
   type: ClusterIP
 ---
-# Versión de la API de Kubernetes para el ingress
+########## # Versión de la API de Kubernetes para el ingress
 apiVersion: networking.k8s.io/v1
-# Tipo de objeto que se crea (ingress)
+########## # Tipo de objeto que se crea (ingress)
 kind: Ingress
-# Metadatos del ingress (nombre, namespace y anotaciones)
+########## # Metadatos del ingress (nombre, namespace y anotaciones)
 metadata:
   name: barom
   namespace: aemet
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
-# Configuración del ingress (reglas y backend)
+########## # Configuración del ingress (reglas y backend)
 spec:
-  # Reglas para enrutar las solicitudes al servicio
+  ########## # Reglas para enrutar las solicitudes al servicio
   rules:
     - http:
         paths:
-          # Ruta del ingreso
+          ########## # Ruta del ingreso
           - path: /
-            # Tipo de ruta (prefijo)
+            ########## # Tipo de ruta (prefijo)
             pathType: Prefix
-            # Backend del ingreso
+            ########## # Backend del ingreso
             backend:
               service:
                 name: servicio-barometrico
@@ -157,21 +157,21 @@ spec:
 
 
 Escalado
-# ver los servicioss
-
+########## # ver los servicioss
+kubectl -n aemet get services
  
-# ver los despliegues
+########## # ver los despliegues
  kubectl -n aemet get deployment barom
  
-# autoesclar por uso de cpu
+########## # autoesclar por uso de cpu
  
  kubectl -n aemet autoscale deployment barom --cpu-percent=20 --min=4 --max=10
  
-#visualizar autoescalados
+########## #visualizar autoescalados
  
  kubectl -n aemet get hpa
  
-# eliminarlos
+########## # eliminarlos
  
  kubectl -n aemet delete hpa barom
  
@@ -181,23 +181,23 @@ Escalado
  
 ##################### CRear microbot (pods) 
  microk8s kubectl create deployment microbot --image=dontrebootme/microbot:v1
-# 2 réplicas
+########### 2 réplicas
 
 microk8s kubectl scale deployment microbot --replicas=2
 
 
-#exponer el puerto 
+########## exponer el puerto 
  microk8s kubectl expose deployment microbot --type=NodePort --port=80 --name=microbot-service
  
-#visualizamos el cluster
+########## #visualizamos el cluster
 
 microk8s kubectl get all --all-namespaces
 
-# ver el puerto de microbot y consultar EJEMPLO!!!!
+###########  ver el puerto de microbot y consultar EJEMPLO!!!!
 
 curl localhost:30760
 
-#comandos Integrados
+########### comandos Integrados
 
 microk8s status: Provides an overview of the MicroK8s state (running / not running) as well as the set of enabled addons
 microk8s enable: Enables an addon
