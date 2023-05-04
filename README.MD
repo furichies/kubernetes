@@ -16,7 +16,7 @@ acceso vagrant ssh minikube
 
 minikube start
 
-# crear espacio de nombres si se quieren separa los servicios. Propiedad de l kernel linux para separa y controlar los procesos.
+########## crear espacio de nombres si se quieren separa los servicios. Propiedad de l kernel linux para separa y controlar los procesos.
 
 kubectl create namespace aemet
 
