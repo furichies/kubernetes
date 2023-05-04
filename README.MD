@@ -63,9 +63,8 @@ kubectl delete all -l app=barom --all-namespaces
 kubectl apply -f /vagrant/barom-service.yml
 
 
-######################### EXPLICACIÓN ##################################################
-#########################################################################################
-#####################################################################################
+######################### EXPLICACIÓN 
+<br>
 ########### Versión de la API de Kubernetes para el deployment
 apiVersion: apps/v1
 ########### Tipo de objeto que se crea (deployment)
