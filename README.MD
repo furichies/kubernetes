@@ -66,21 +66,21 @@ kubectl apply -f /vagrant/barom-service.yml
 ######################### EXPLICACIÓN ##################################################
 #########################################################################################
 #####################################################################################
-########## # Versión de la API de Kubernetes para el deployment
+########### Versión de la API de Kubernetes para el deployment
 apiVersion: apps/v1
-########## # Tipo de objeto que se crea (deployment)
+########### Tipo de objeto que se crea (deployment)
 kind: Deployment
-########## # Metadatos del deployment (nombre, namespace y etiquetas)
+########### Metadatos del deployment (nombre, namespace y etiquetas)
 metadata:
   name: barom
   namespace: aemet
-  ########## # Etiqueta del deployment
+  ########### Etiqueta del deployment
   labels:
     app: barom
-########## # Configuración del deployment (número de réplicas y plantilla)
+########### Configuración del deployment (número de réplicas y plantilla)
 spec:
   replicas: 1
-  ########## # Regla para seleccionar los pods que forman parte del deployment
+  ##########  Regla para seleccionar los pods que forman parte del deployment
   selector:
     matchLabels:
       app: barom
@@ -133,17 +133,17 @@ metadata:
   namespace: aemet
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
-########## # Configuración del ingress (reglas y backend)
+########### Configuración del ingress (reglas y backend)
 spec:
-  ########## # Reglas para enrutar las solicitudes al servicio
+  ########### Reglas para enrutar las solicitudes al servicio
   rules:
     - http:
         paths:
-          ########## # Ruta del ingreso
+          ########### Ruta del ingreso
           - path: /
             ########## # Tipo de ruta (prefijo)
             pathType: Prefix
-            ########## # Backend del ingreso
+            ########### Backend del ingreso
             backend:
               service:
                 name: servicio-barometrico
@@ -157,21 +157,21 @@ spec:
 
 
 Escalado
-########## # ver los servicioss
+########### ver los servicioss
 kubectl -n aemet get services
  
-########## # ver los despliegues
+########### ver los despliegues
  kubectl -n aemet get deployment barom
  
-########## # autoesclar por uso de cpu
+########### autoesclar por uso de cpu
  
  kubectl -n aemet autoscale deployment barom --cpu-percent=20 --min=4 --max=10
  
-########## #visualizar autoescalados
+###########visualizar autoescalados
  
  kubectl -n aemet get hpa
  
-########## # eliminarlos
+########### eliminarlos
  
  kubectl -n aemet delete hpa barom
  
