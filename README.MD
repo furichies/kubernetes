@@ -68,79 +68,79 @@ kubectl apply -f /vagrant/barom-service.yml
 ########### Versión de la API de Kubernetes para el deployment<br>
 apiVersion: apps/v1 <br>
 ########### Tipo de objeto que se crea (deployment)<br>
-kind: Deployment
-########### Metadatos del deployment (nombre, namespace y etiquetas)
+kind: Deployment <br>
+########### Metadatos del deployment (nombre, namespace y etiquetas)<br>
 metadata:
   name: barom
   namespace: aemet
-  ########### Etiqueta del deployment
+  ########### Etiqueta del deployment<br>
   labels:
     app: barom
-########### Configuración del deployment (número de réplicas y plantilla)
+########### Configuración del deployment (número de réplicas y plantilla)<br>
 spec:
   replicas: 1
-  ##########  Regla para seleccionar los pods que forman parte del deployment
+  ##########  Regla para seleccionar los pods que forman parte del deployment<br>
   selector:
     matchLabels:
       app: barom
-  ###########  Plantilla para crear los pods
+  ###########  Plantilla para crear los pods<br>
   template:
     metadata:
       labels:
         app: barom
-    ###########  Contenedores que estarán en los pods creados
+    ###########  Contenedores que estarán en los pods creados<br>
     spec:
       containers:
         - name: barom
           image: ricardoinstructorformacion/barometrico
-          ###########  Puertos que se exponen en el contenedor
+          ###########  Puertos que se exponen en el contenedor<br>
           ports:
             - containerPort: 7000
 ---
-###########  Versión de la API de Kubernetes para el servicio
+###########  Versión de la API de Kubernetes para el servicio<br>
 apiVersion: v1
-###########  Tipo de objeto que se crea (servicio)
+###########  Tipo de objeto que se crea (servicio)<br>
 kind: Service
-###########  Metadatos del servicio (nombre, namespace y etiquetas)
+###########  Metadatos del servicio (nombre, namespace y etiquetas)<br>
 metadata:
   name: servicio-barometrico
   namespace: aemet
-  ###########  Etiqueta del servicio
+  ###########  Etiqueta del servicio<br>
   labels:
     app: barom
-########### Configuración del servicio (puertos, selección y tipo)
+########### Configuración del servicio (puertos, selección y tipo)<br>
 spec:
-  ###########  Puertos que se exponen en el servicio
+  ###########  Puertos que se exponen en el servicio<br>
   ports:
     - name: http
       port: 80
       protocol: TCP
       targetPort: 7000
-  ########### Regla para seleccionar los pods a los que se dirige el servicio
+  ########### Regla para seleccionar los pods a los que se dirige el servicio<br>
   selector:
     app: barom
-  ########## # Tipo de servicio (ClusterIP)
+  ########## # Tipo de servicio (ClusterIP)<br>
   type: ClusterIP
 ---
-########## # Versión de la API de Kubernetes para el ingress
+########## # Versión de la API de Kubernetes para el ingress<br>
 apiVersion: networking.k8s.io/v1
-########## # Tipo de objeto que se crea (ingress)
+########## # Tipo de objeto que se crea (ingress)<br>
 kind: Ingress
-########## # Metadatos del ingress (nombre, namespace y anotaciones)
+########## # Metadatos del ingress (nombre, namespace y anotaciones)<br>
 metadata:
   name: barom
   namespace: aemet
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
-########### Configuración del ingress (reglas y backend)
+########### Configuración del ingress (reglas y backend)<br>
 spec:
-  ########### Reglas para enrutar las solicitudes al servicio
+  ########### Reglas para enrutar las solicitudes al servicio<br>
   rules:
     - http:
         paths:
-          ########### Ruta del ingreso
+          ########### Ruta del ingreso<br>
           - path: /
-            ########## # Tipo de ruta (prefijo)
+            ########## # Tipo de ruta (prefijo)<br>
             pathType: Prefix
             ########### Backend del ingreso
             backend:
@@ -148,55 +148,55 @@ spec:
                 name: servicio-barometrico
                 port:
                   number: 80
-#####################################FIN EXPLICACIÓN#######################
+<br>#####################################FIN EXPLICACIÓN#######################
 ##########################################################################
-#######################################################################
+#######################################################################<br>
 
 
 
 
 Escalado
-########### ver los servicioss
+########### ver los servicioss<br>
 kubectl -n aemet get services
  
-########### ver los despliegues
+########### ver los despliegues<br>
  kubectl -n aemet get deployment barom
  
-########### autoesclar por uso de cpu
+########### autoesclar por uso de cpu<br>
  
  kubectl -n aemet autoscale deployment barom --cpu-percent=20 --min=4 --max=10
  
-###########visualizar autoescalados
+###########visualizar autoescalados<br>
  
  kubectl -n aemet get hpa
  
-########### eliminarlos
+########### eliminarlos<br>
  
  kubectl -n aemet delete hpa barom
  
  
-###############################################################################
-############## MICROK8S https://ubuntu.com/tutorials/install-a-local-kubernetes-with-microk8s
+<br>###############################################################################
+############## MICROK8S https://ubuntu.com/tutorials/install-a-local-kubernetes-with-microk8s <br>
  
-##################### CRear microbot (pods) 
- microk8s kubectl create deployment microbot --image=dontrebootme/microbot:v1
-########### 2 réplicas
+##################### CRear microbot (pods) <br>
+ microk8s kubectl create deployment microbot --image=dontrebootme/microbot:v1<br>
+########### 2 réplicas<br>
 
 microk8s kubectl scale deployment microbot --replicas=2
 
 
-########## exponer el puerto 
+########## exponer el puerto <br>
  microk8s kubectl expose deployment microbot --type=NodePort --port=80 --name=microbot-service
  
-########## #visualizamos el cluster
+###########visualizamos el cluster<br>
 
 microk8s kubectl get all --all-namespaces
 
-###########  ver el puerto de microbot y consultar EJEMPLO!!!!
+###########  ver el puerto de microbot y consultar EJEMPLO!!!!<br>
 
 curl localhost:30760
 
-########### comandos Integrados
+########### comandos Integrados<br>
 
 microk8s status: Provides an overview of the MicroK8s state (running / not running) as well as the set of enabled addons
 microk8s enable: Enables an addon
