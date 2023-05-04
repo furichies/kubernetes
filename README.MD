@@ -211,4 +211,3 @@ microk8s stop: Stops all kubernetes services
 microk8s start: Starts MicroK8s after it is being stopped
 
  </pre>
-
